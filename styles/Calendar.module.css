@@ -1,0 +1,26 @@
+.row {
+  display: contents;
+}
+.cell {
+  background: white;
+  display: grid;
+  place-items: center;
+}
+.item {
+  background: white;
+  padding: 0.25rem;
+}
+.calendar {
+  display: grid;
+  grid-template-columns: auto repeat(7, 2rem) max-content;
+  grid-auto-rows: 2rem;
+  gap: 0.1rem;
+  background: black;
+  padding: 0.25rem;
+  width: min-content;
+}
+
+.popOverDetailsList {
+  display: grid;
+  grid-template-columns: auto max-content;
+}
