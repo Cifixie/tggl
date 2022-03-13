@@ -26,25 +26,48 @@ const scale = d3.scaleThreshold(
     "#005f73",
   ]
 );
+const bad = "#ca6702";
+const good = "#0a9396";
+
+const getBackgroundColor = ({ meta, ...entry }: DeserializedTimeEntry) => {
+  if (typeof entry.balance === "number") {
+    if (entry.balance === 0 && meta.vacation) return "#C8C8C8";
+    if (entry.balance === 0 && meta.holiday) return "#D0D0D0";
+    if (entry.balance === 0 && meta.future) return "#F0F0F0";
+    if (entry.balance === 0 && meta.weekend) return "#B8B8B8";
+    return scale(entry.balance);
+  }
+  return "white";
+};
 
 interface CalendarProps {
-  dates: Date[];
+  startDate: Date | number;
+  endDate: Date | number;
   entries: DeserializedTimeEntry[];
 }
-function Calendar({ entries, dates }: CalendarProps) {
+function Calendar({
+  entries,
+  startDate = Date.now(),
+  endDate = Date.now(),
+}: CalendarProps) {
   const [isPopOverOpen, openPopOver] = useState<string | null>(null);
-  const now = Date.now();
-
+  const dateRange =
+    startDate && endDate
+      ? d3.timeDays(
+          startOfWeek(startDate, { weekStartsOn: 1 }),
+          endOfWeek(endDate, { weekStartsOn: 1 })
+        )
+      : [];
   const weekly = d3.rollups(
-    dates,
+    dateRange,
     (dates) => {
       const items = dates.map((date) => {
-        const balance = entries.find((b) => isSameDay(b.date, date));
-        return { time: date, ...balance };
+        const entry = entries.find((b) => isSameDay(b.date, date));
+        return { date, entry };
       });
       return {
         items,
-        total: d3.sum(items, (d) => d.balance ?? 0),
+        total: d3.sum(items, (d) => d?.entry?.balance ?? 0),
       };
     },
     (date) => format(date, "w", { weekStartsOn: 1 })
@@ -67,50 +90,69 @@ function Calendar({ entries, dates }: CalendarProps) {
         return (
           <div key={weekNumber} className={styles.row}>
             <div className={styles.cell}>{weekNumber}</div>
-            {items.map(({ time, balance, logged, meta }) => {
-              const background = meta?.vacation
-                ? "gray"
-                : balance !== null && balance !== undefined
-                ? scale(balance)
+            {items.map(({ date, entry }) => {
+              const backgroundColor = entry
+                ? getBackgroundColor(entry)
                 : "white";
               return (
                 <Popover
-                  key={time.toISOString()}
-                  isOpen={isPopOverOpen === time.toISOString()}
+                  key={date.toISOString()}
+                  isOpen={isPopOverOpen === date.toISOString()}
                   positions={["top", "bottom", "left", "right"]} // preferred positions by priority
                   content={
                     <div className={styles.item}>
                       <dl className={styles.popOverDetailsList}>
-                        <dt>logged</dt>
+                        <dt>Logged hours</dt>
                         <dd>
-                          {prettyMS(1000 * (logged ?? 0), {
+                          {prettyMS(1000 * (entry?.logged ?? 0), {
                             colonNotation: true,
                           })}
                         </dd>
                         <dt>balance</dt>
-                        <dd>
-                          {balance ? prettyMS(1000 * (balance ?? 0)) : null}
+                        <dd
+                          style={{
+                            color: (entry?.balance ?? 0) < 0 ? bad : good,
+                          }}
+                        >
+                          {entry?.balance
+                            ? prettyMS(1000 * (entry?.balance ?? 0))
+                            : null}
                         </dd>
+                        {entry?.meta ? (
+                          <>
+                            <dt>Meta</dt>
+                            <dd>
+                              {Object.entries(entry?.meta)
+                                .filter(([, value]) => value)
+                                .map(([key]) => key)
+                                .join(", ")}
+                            </dd>
+                          </>
+                        ) : null}
                       </dl>
                     </div>
                   }
                 >
                   <div
-                    onMouseOver={
-                      logged ? () => openPopOver(time.toISOString()) : undefined
-                    }
+                    onMouseOver={() => {
+                      if (entry?.meta && !entry.meta.future) {
+                        openPopOver(date.toISOString());
+                      }
+                    }}
                     onMouseLeave={() => openPopOver(null)}
                     className={styles.cell}
                     style={{
-                      background,
+                      backgroundColor,
                     }}
                   >
-                    {time.getDate()}
+                    {date.getDate()}
                   </div>
                 </Popover>
               );
             })}
-            <div className={styles.cell}>{prettyMS(total * 1000)}</div>
+            <div className={styles.totalCell}>
+              {prettyMS(total * 1000, { unitCount: 2 })}
+            </div>
           </div>
         );
       })}

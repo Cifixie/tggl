@@ -5,13 +5,13 @@ export interface DateMeta {
   vacation: boolean;
   today: boolean;
   future: boolean;
-  past: boolean;
 }
 
 export interface TimeEntry {
   date: string;
   logged: number;
-  balance: number | null;
+  expected: number;
+  balance: number;
   meta: DateMeta;
 }
 

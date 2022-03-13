@@ -31,6 +31,7 @@ export interface DeserializedTimeEntry extends Omit<TimeEntry, "date"> {
 
 function useTotals(): [
   totals: DeserializedTimeEntry[],
+  dates: Dates | null,
   setDates: UseState<Dates | null>
 ] {
   const [dates, setDates] = useState<Dates | null>(null);
@@ -45,7 +46,7 @@ function useTotals(): [
       date: deserializeDate(d.date),
     })) ?? [];
 
-  return [deserialized, setDates];
+  return [deserialized, dates, setDates];
 }
 
 export default useTotals;

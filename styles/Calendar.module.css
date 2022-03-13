@@ -5,6 +5,14 @@
   background: white;
   display: grid;
   place-items: center;
+  padding: 0.5rem;
+}
+.totalCell {
+  background: white;
+  display: grid;
+  align-items: center;
+  justify-items: end;
+  padding: 0.5rem;
 }
 .item {
   background: white;
@@ -23,4 +31,9 @@
 .popOverDetailsList {
   display: grid;
   grid-template-columns: auto max-content;
+}
+
+.popOverDetailsList dl {
+  margin: 0;
+  padding: 0;
 }

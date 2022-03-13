@@ -5,7 +5,6 @@ import { addDays } from "date-fns";
 import { Totals } from "../../interfaces/timeEntries";
 import { ApiTimeEntriesTotals } from "../../interfaces/tggl";
 import { serializeDate, deserializeDate, getDateMeta } from "../../utils/date";
-import { countBalance } from "../../utils/balance";
 
 const workspace = "1557980";
 const basePath = `https://track.toggl.com/reports/api/v3/workspace/${workspace}/search`;
@@ -44,6 +43,8 @@ function parseQuery(query: Record<string, string | string[]>) {
   };
 }
 
+const workdayInSeconds = 27000;
+
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Totals>
@@ -60,10 +61,12 @@ export default function handler(
       entries: json.graph?.map(({ seconds }, i) => {
         const date = addDays(startTime, i);
         const meta = getDateMeta(date);
+        const expected = meta.workday && !meta.future ? workdayInSeconds : 0;
         return {
           date: serializeDate(date),
-          balance: countBalance(seconds, meta),
           logged: seconds,
+          balance: seconds - expected,
+          expected,
           meta,
         };
       }),

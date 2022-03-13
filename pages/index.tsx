@@ -1,35 +1,13 @@
 import Head from "next/head";
-import { startOfMonth, endOfMonth, endOfWeek, startOfWeek } from "date-fns";
+import { startOfMonth, endOfMonth, subMonths } from "date-fns";
 import type { NextPage } from "next";
 import useTotals from "./useTotals";
 import * as d3 from "d3";
 import Calendar from "./Calendar";
-import prettyMS from "pretty-ms";
-
-const scale = d3.scaleThreshold(
-  [-5 * 3600, -3 * 3600, -1 * 3600, 0 * 3600, 1 * 3600, 2 * 3600, 3 * 3600],
-  [
-    "#9b2226",
-    "#ca6702",
-    "#ee9b00ff",
-    "#e9d8a6ff",
-    "#94d2bd",
-    "#0a9396",
-    "#005f73",
-  ]
-);
 
 const Home: NextPage = () => {
-  const [totals, setDates] = useTotals();
+  const [totals, dates, setDates] = useTotals();
   const now = Date.now();
-  const firstDayOfMonth = startOfMonth(now);
-  const lastDayOfMonth = endOfMonth(now);
-  const dates = d3.timeDays(
-    startOfWeek(firstDayOfMonth, { weekStartsOn: 1 }),
-    endOfWeek(lastDayOfMonth, { weekStartsOn: 1 })
-  );
-
-  const cumsum = d3.cumsum(totals, (b) => b.balance);
 
   return (
     <div>
@@ -43,27 +21,49 @@ const Home: NextPage = () => {
         <button
           onClick={() => {
             setDates({
-              start_date: firstDayOfMonth,
-              end_date: lastDayOfMonth,
+              start_date: startOfMonth(subMonths(now, 1)),
+              end_date: endOfMonth(subMonths(now, 1)),
+            });
+          }}
+        >
+          Last Month
+        </button>
+        <button
+          onClick={() => {
+            setDates({
+              start_date: startOfMonth(now),
+              end_date: endOfMonth(now),
             });
           }}
         >
           This Month
         </button>
-        <button>Week</button>
       </main>
       <section>
-        <h3>
-          balance:
-          {prettyMS(d3.sum(totals, (t) => t.balance) * 1000)}
-        </h3>
-        <h3>
-          Total (Logged hours):
-          {(d3.sum(totals, (t) => t.logged) / 3600).toFixed(2)} hours
-        </h3>
+        <h3>Hours</h3>
+        <table>
+          <tr>
+            <th>Expected</th>
+            <td>{(d3.sum(totals, (t) => t.expected) / 3600).toFixed(2)}</td>
+          </tr>
+          <tr>
+            <th>Logged</th>
+            <td>{(d3.sum(totals, (t) => t.logged) / 3600).toFixed(2)}</td>
+          </tr>
+          <tr>
+            <th>Balance</th>
+            <td>{(d3.sum(totals, (t) => t.balance) / 3600).toFixed(2)}</td>
+          </tr>
+        </table>
         <hr />
       </section>
-      <Calendar entries={totals} dates={dates} />
+      {dates?.start_date && dates?.end_date && (
+        <Calendar
+          entries={totals}
+          startDate={dates.start_date}
+          endDate={dates.end_date}
+        />
+      )}
       <section id="chart"></section>
     </div>
   );

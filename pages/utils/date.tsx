@@ -3,7 +3,6 @@ import parse from "date-fns/parse";
 import isSameDay from "date-fns/isSameDay";
 import isWeekend from "date-fns/isWeekend";
 import isFuture from "date-fns/isFuture";
-import isPast from "date-fns/isPast";
 import isToday from "date-fns/isToday";
 import _holidays from "../../holidays.json";
 import _vacations from "../../vacations.json";
@@ -16,14 +15,14 @@ export function getDateMeta(date: Date): DateMeta {
   const vacation = isVacation(date);
   const holiday = isHoliday(date);
   const weekend = isWeekend(date);
+  const workday = !(holiday || vacation || weekend);
   return {
     holiday,
     weekend,
     vacation,
     future: isFuture(date),
-    past: isPast(date),
     today: isToday(date),
-    workday: !(holiday || vacation || weekend),
+    workday,
   };
 }
 
