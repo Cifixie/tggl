@@ -2,9 +2,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import fetch from "node-fetch";
 import { addDays } from "date-fns";
-import { Totals } from "../../interfaces/timeEntries";
-import { ApiTimeEntriesTotals } from "../../interfaces/tggl";
-import { serializeDate, deserializeDate, getDateMeta } from "../../utils/date";
+import { Totals } from "../../../interfaces/timeEntries";
+import { ApiTimeEntriesTotals } from "../../../interfaces/tggl";
+import {
+  serializeDate,
+  deserializeDate,
+  getDateMeta,
+} from "../../../utils/date";
 
 const workspace = "1557980";
 const basePath = `https://track.toggl.com/reports/api/v3/workspace/${workspace}/search`;

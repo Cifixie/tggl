@@ -1,9 +1,9 @@
 import Head from "next/head";
 import { startOfMonth, endOfMonth, subMonths, format } from "date-fns";
 import type { NextPage } from "next";
-import useTotals from "./useTotals";
+import useTotals from "../hooks/useTotals";
 import * as d3 from "d3";
-import Calendar from "./Calendar";
+import Calendar from "../sections/Calendar";
 import { useEffect, useState } from "react";
 
 const Home: NextPage = () => {

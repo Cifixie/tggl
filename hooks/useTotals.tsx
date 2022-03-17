@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import useSWR from "swr";
 import { stringify } from "qs";
-import { Totals, TimeEntry } from "./interfaces/timeEntries";
-import { serializeDate, deserializeDate } from "./utils/date";
+import { Totals, TimeEntry } from "../interfaces/timeEntries";
+import { serializeDate, deserializeDate } from "../utils/date";
 
 interface Dates {
   start_date: Date;

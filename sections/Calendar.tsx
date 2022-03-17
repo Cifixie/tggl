@@ -8,7 +8,7 @@ import {
   startOfWeek,
   format,
 } from "date-fns";
-import { DeserializedTimeEntry } from "./useTotals";
+import { DeserializedTimeEntry } from "../hooks/useTotals";
 import * as d3 from "d3";
 import prettyMS from "pretty-ms";
 import { Popover } from "react-tiny-popover";

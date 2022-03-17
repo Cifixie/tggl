@@ -4,8 +4,8 @@ import isSameDay from "date-fns/isSameDay";
 import isWeekend from "date-fns/isWeekend";
 import isFuture from "date-fns/isFuture";
 import isToday from "date-fns/isToday";
-import _holidays from "../../holidays.json";
-import _vacations from "../../vacations.json";
+import _holidays from "../holidays.json";
+import _vacations from "../vacations.json";
 import { DateMeta } from "../interfaces/timeEntries";
 
 const holidays = _holidays.map((holiday) => deserializeDate(holiday.date));
