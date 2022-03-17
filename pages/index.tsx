@@ -1,19 +1,23 @@
 import Head from "next/head";
-import {
-  startOfMonth,
-  endOfMonth,
-  subMonths,
-  startOfQuarter,
-  format,
-} from "date-fns";
+import { startOfMonth, endOfMonth, subMonths, format } from "date-fns";
 import type { NextPage } from "next";
 import useTotals from "./useTotals";
 import * as d3 from "d3";
 import Calendar from "./Calendar";
+import { useEffect, useState } from "react";
 
 const Home: NextPage = () => {
+  const now = new Date();
+  const [month, setMonth] = useState(now.getMonth());
   const [totals, dates, setDates] = useTotals();
-  const now = Date.now();
+
+  useEffect(() => {
+    const date = new Date().setMonth(month);
+    setDates({
+      start_date: startOfMonth(date),
+      end_date: endOfMonth(date),
+    });
+  }, [setDates, month]);
 
   return (
     <div>
@@ -25,13 +29,9 @@ const Home: NextPage = () => {
 
       <main>
         <select
+          value={month}
           onChange={(e) => {
-            const month = parseInt(e.target.value, 10);
-            const date = new Date(now).setMonth(month);
-            setDates({
-              start_date: startOfMonth(date),
-              end_date: endOfMonth(date),
-            });
+            setMonth(parseInt(e.target.value, 10));
           }}
         >
           <option value="0">Tammi</option>
@@ -49,20 +49,14 @@ const Home: NextPage = () => {
         </select>
         <button
           onClick={() => {
-            setDates({
-              start_date: startOfMonth(subMonths(now, 1)),
-              end_date: endOfMonth(subMonths(now, 1)),
-            });
+            setMonth(subMonths(now, 1).getMonth());
           }}
         >
           Last Month
         </button>
         <button
           onClick={() => {
-            setDates({
-              start_date: startOfMonth(now),
-              end_date: endOfMonth(now),
-            });
+            setMonth(now.getMonth());
           }}
         >
           This Month
