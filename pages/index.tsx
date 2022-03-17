@@ -1,5 +1,11 @@
 import Head from "next/head";
-import { startOfMonth, endOfMonth, subMonths } from "date-fns";
+import {
+  startOfMonth,
+  endOfMonth,
+  subMonths,
+  startOfQuarter,
+  format,
+} from "date-fns";
 import type { NextPage } from "next";
 import useTotals from "./useTotals";
 import * as d3 from "d3";
@@ -18,6 +24,29 @@ const Home: NextPage = () => {
       </Head>
 
       <main>
+        <select
+          onChange={(e) => {
+            const month = parseInt(e.target.value, 10);
+            const date = new Date(now).setMonth(month);
+            setDates({
+              start_date: startOfMonth(date),
+              end_date: endOfMonth(date),
+            });
+          }}
+        >
+          <option value="0">Tammi</option>
+          <option value="1">Helmi</option>
+          <option value="2">Maalis</option>
+          <option value="3">Huhti</option>
+          <option value="4">Touko</option>
+          <option value="5">Kesä</option>
+          <option value="6">Heinä</option>
+          <option value="7">Elo</option>
+          <option value="8">Syys</option>
+          <option value="9">Loka</option>
+          <option value="10">Marras</option>
+          <option value="11">joulu</option>
+        </select>
         <button
           onClick={() => {
             setDates({
@@ -40,20 +69,25 @@ const Home: NextPage = () => {
         </button>
       </main>
       <section>
+        {dates?.start_date ? (
+          <h2>{format(dates?.start_date, "MMMM")}</h2>
+        ) : null}
         <h3>Hours</h3>
         <table>
-          <tr>
-            <th>Expected</th>
-            <td>{(d3.sum(totals, (t) => t.expected) / 3600).toFixed(2)}</td>
-          </tr>
-          <tr>
-            <th>Logged</th>
-            <td>{(d3.sum(totals, (t) => t.logged) / 3600).toFixed(2)}</td>
-          </tr>
-          <tr>
-            <th>Balance</th>
-            <td>{(d3.sum(totals, (t) => t.balance) / 3600).toFixed(2)}</td>
-          </tr>
+          <thead>
+            <tr>
+              <th>Expected</th>
+              <th>Logged</th>
+              <th>Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{(d3.sum(totals, (t) => t.expected) / 3600).toFixed(2)}</td>
+              <td>{(d3.sum(totals, (t) => t.logged) / 3600).toFixed(2)}</td>
+              <td>{(d3.sum(totals, (t) => t.balance) / 3600).toFixed(2)}</td>
+            </tr>
+          </tbody>
         </table>
         <hr />
       </section>
