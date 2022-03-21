@@ -15,7 +15,7 @@ import { Popover } from "react-tiny-popover";
 import styles from "../styles/Calendar.module.css";
 
 const scale = d3.scaleThreshold(
-  [-5 * 3600, -3 * 3600, -1 * 3600, 0 * 3600, 1 * 3600, 2 * 3600, 3 * 3600],
+  [-5, -3, -1, 0, 1, 2, 3].map((a) => a * 3600),
   [
     "#9b2226",
     "#ca6702",
