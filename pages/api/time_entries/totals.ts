@@ -13,12 +13,10 @@ import {
 const workspace = "1557980";
 const basePath = `https://track.toggl.com/reports/api/v3/workspace/${workspace}/search`;
 
+const { AUTHORIZATION = "" } = process.env;
 function createHeaders(headers = new Headers()) {
   headers.append("Content-Type", "application/json");
-  headers.append(
-    "Authorization",
-    "Basic ZDk3YmJkM2Q1NGRkNTY1ZTM2NTcxZTA5NjljZjMwYjA6YXBpX3Rva2Vu"
-  );
+  headers.append("Authorization", AUTHORIZATION);
   return headers;
 }
 
