@@ -107,7 +107,9 @@ function Calendar({
                   positions={["top", "bottom", "left", "right"]} // preferred positions by priority
                   content={
                     <div className={styles.item}>
-                      <strong>{format(date, "dd.MM", dateFnsOptions)}</strong>
+                      <strong>
+                        {format(date, "iii dd.MM", dateFnsOptions)}
+                      </strong>
                       <dl className={styles.popOverDetailsList}>
                         <dt>Logged hours</dt>
                         <dd>

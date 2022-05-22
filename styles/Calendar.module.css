@@ -31,9 +31,6 @@
 .popOverDetailsList {
   display: grid;
   grid-template-columns: auto max-content;
-}
-
-.popOverDetailsList dl {
   margin: 0;
   padding: 0;
 }
