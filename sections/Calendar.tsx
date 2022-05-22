@@ -8,6 +8,7 @@ import {
   startOfWeek,
   format,
 } from "date-fns";
+import localeFi from "date-fns/locale/fi";
 import { DeserializedTimeEntry } from "../hooks/useTotals";
 import * as d3 from "d3";
 import prettyMS from "pretty-ms";
@@ -28,6 +29,11 @@ const scale = d3.scaleThreshold(
 );
 const bad = "#ca6702";
 const good = "#0a9396";
+
+const dateFnsOptions = {
+  locale: localeFi,
+  weekStartsOn: 1,
+} as const;
 
 const getBackgroundColor = ({ meta, ...entry }: DeserializedTimeEntry) => {
   if (typeof entry.balance === "number") {
@@ -54,8 +60,8 @@ function Calendar({
   const dateRange =
     startDate && endDate
       ? d3.timeDays(
-          startOfWeek(startDate, { weekStartsOn: 1 }),
-          endOfWeek(endDate, { weekStartsOn: 1 })
+          startOfWeek(startDate, dateFnsOptions),
+          endOfWeek(endDate, dateFnsOptions)
         )
       : [];
   const weekly = d3.rollups(
@@ -70,7 +76,7 @@ function Calendar({
         total: d3.sum(items, (d) => d?.entry?.balance ?? 0),
       };
     },
-    (date) => format(date, "w", { weekStartsOn: 1 })
+    (date) => format(date, "w", dateFnsOptions)
   );
 
   return (
@@ -101,6 +107,7 @@ function Calendar({
                   positions={["top", "bottom", "left", "right"]} // preferred positions by priority
                   content={
                     <div className={styles.item}>
+                      <strong>{format(date, "dd.MM", dateFnsOptions)}</strong>
                       <dl className={styles.popOverDetailsList}>
                         <dt>Logged hours</dt>
                         <dd>
