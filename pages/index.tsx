@@ -96,15 +96,15 @@ const Home: NextPage = () => {
         {totals
           .filter((t) => t.meta.holiday || t.meta.vacation)
           .map((t) => {
-            const meta = Object.entries(t.meta).filter(([, value]) => value);
+            const meta = Object.entries(t.meta).reduce((days, [key, value]) => {
+              if (value) return days.concat(key);
+              return days;
+            }, [] as string[]);
+
             return (
               <li key={t.date.toISOString()}>
                 <strong>{format(t.date, "dd.MM.yyyy")}</strong>
-                {meta.map(([key, value]) => (
-                  <span key={key}>
-                    {key}: {value}
-                  </span>
-                ))}
+                <span>{meta.join(", ")}</span>
               </li>
             );
           })}
