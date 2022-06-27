@@ -94,7 +94,7 @@ const Home: NextPage = () => {
       )}
       <ul>
         {totals
-          .filter((t) => t.meta.holiday && t.meta.vacation)
+          .filter((t) => t.meta.holiday || t.meta.vacation)
           .map((t) => {
             const meta = Object.entries(t.meta).filter(([, value]) => value);
             return (
