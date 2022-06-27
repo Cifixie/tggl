@@ -92,6 +92,23 @@ const Home: NextPage = () => {
           endDate={dates.end_date}
         />
       )}
+      <ul>
+        {totals
+          .filter((t) => t.meta.holiday && t.meta.vacation)
+          .map((t) => {
+            const meta = Object.entries(t.meta).filter(([, value]) => value);
+            return (
+              <li key={t.date.toISOString()}>
+                <strong>{format(t.date, "dd.MM.yyyy")}</strong>
+                {meta.map(([key, value]) => (
+                  <span key={key}>
+                    {key}: {value}
+                  </span>
+                ))}
+              </li>
+            );
+          })}
+      </ul>
       <section id="chart"></section>
     </div>
   );
