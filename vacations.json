@@ -3,15 +3,25 @@
   { "date": "2022-03-04", "name": "Hiihtoloma" },
   { "date": "2022-04-01", "name": "Palkaton vapaa" },
   { "date": "2022-05-27", "name": "Palkaton vapaa" },
+
   { "date": "2022-06-03", "name": "Palkaton vapaa" },
   { "date": "2022-06-10", "name": "Palkaton vapaa" },
   { "date": "2022-06-23", "name": "Palkaton vapaa" },
+
   { "date": "2022-08-04", "name": "Palkaton vapaa" },
   { "date": "2022-08-05", "name": "Palkaton vapaa" },
+
   { "date": "2022-11-23", "name": "Palkaton vapaa" },
   { "date": "2022-12-21", "name": "Palkaton vapaa" },
+
+  { "date": "2023-02-10", "name": "Palkaton vapaa" },
   { "date": "2023-02-27", "name": "Sairasloma" },
   { "date": "2023-02-28", "name": "Sairasloma" },
+
+  { "date": "2023-03-15", "name": "Palkaton vapaa - Muutto" },
+  { "date": "2023-03-16", "name": "Palkaton vapaa - Muutto" },
+  { "date": "2023-03-17", "name": "Palkaton vapaa - Muutto" },
+
   { "date": "2023-04-26", "name": "Sairasloma" },
   { "date": "2023-04-27", "name": "Sairasloma" },
   { "date": "2023-04-28", "name": "Sairasloma" }
